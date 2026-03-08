@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diamond Quote System</title>
+    <style>
+        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8f9fa; padding: 20px; color: #333; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        h2 { text-align: center; font-weight: 600; margin-bottom: 25px; color: #1a1a1a; }
+        
+        .disclaimer { background-color: #fff4f4; color: #d93025; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid #d93025; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #666; }
+        
+        select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; outline: none; transition: border 0.2s; }
+        select:focus, input:focus { border-color: #007aff; }
+        select:disabled { background-color: #f0f0f0; cursor: not-allowed; }
+
+        button { width: 100%; padding: 15px; background-color: #1a1a1a; color: white; border: none; border-radius: 10px; font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+        button:active { transform: scale(0.98); }
+
+        #result-area { margin-top: 30px; text-align: center; padding: 20px; border-radius: 12px; }
+        .total-price { font-size: 32px; font-weight: bold; color: #1a1a1a; margin-top: 5px; }
+        .error-msg { color: #d93025; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>VVS1 Lab Diamond/CVD Quotation</h2>
+    
+    <div class="disclaimer">
+        <strong>Notice:</strong> We do not provide quotes for diamonds under 1.00 carat.
+                                                        Developed by (TIk Tok Jayring001) version V1.0.0. 
+                                             WhatsApp +86 17269571396          
+                                           Email: 1045010520@163.com. 
+
+     
+    </div>
+
+    <!-- 1. 克拉输入 -->
+    <div class="form-group">
+        <label>Carat Weight (ct)</label>
+        <input type="number" id="carat" placeholder="e.g. 1.25" step="0.001">
+    </div>
+
+    <!-- 2. 形状下拉 -->
+    <div class="form-group">
+        <label>Diamond Shape</label>
+        <select id="shape" onchange="handleShapeChange()">
+            <option value="Round">Round</option>
+            <option value="Princess">Princess</option>
+            <option value="Marquise">Marquise</option>
+            <option value="Radiant">Radiant</option>
+            <option value="Oval">Oval</option>
+            <option value="Pear">Pear</option>
+            <option value="Cushion">Cushion</option>
+            <option value="Heart">Heart</option>
+        </select>
+    </div>
+
+    <!-- 3. 颜色下拉 -->
+    <div class="form-group">
+        <label>Diamond Color</label>
+        <select id="color">
+            <option value="White">White</option>
+            <option value="Yellow">Yellow</option>
+            <option value="Blue">Blue</option>
+            <option value="Pink">Pink</option>
+            <option value="Champagne">Champagne</option>
+        </select>
+    </div>
+
+    <button onclick="calculateQuote()">Calculate The  Price</button>
+
+    <div id="result-area"></div>
+</div>
+
+<script>
+    // 页面加载时执行一次逻辑，确保初始状态正确
+    window.onload = handleShapeChange;
+
+    // 处理形状改变的联动逻辑
+    function handleShapeChange() {
+        const shape = document.getElementById('shape').value;
+        const colorSelect = document.getElementById('color');
+
+        if (shape === 'Round') {
+            colorSelect.value = 'White'; // 强制选择白色
+            colorSelect.disabled = true; // 锁定下拉菜单
+        } else {
+            colorSelect.disabled = false; // 解锁
+        }
+    }
+
+    function calculateQuote() {
+        const carat = parseFloat(document.getElementById('carat').value);
+        const shape = document.getElementById('shape').value;
+        const color = document.getElementById('color').value;
+        const resultArea = document.getElementById('result-area');
+
+        // 基础验证：小于1克拉不提供报价
+        if (isNaN(carat) || carat < 1.0) {
+            resultArea.innerHTML = '<div class="error-msg">Sorry, quotes are not provided for diamonds under 1.00 carat.</div>';
+            return;
+        }
+
+        let unitPrice = 0;
+
+        // 逻辑判断开始
+        if (shape === 'Round' && color === 'White') {
+            // Case A: Round + White
+            if (carat >= 1.0 && carat <= 1.4) unitPrice = 164.57;
+            else if (carat > 1.4 && carat <= 1.9) unitPrice = 198.85;
+            else if (carat > 1.9 && carat <= 2.5) unitPrice = 208.92;
+            else if (carat > 2.5 && carat <= 5.49) unitPrice = 252.9;
+        } 
+        else if (color === 'White' && (shape === 'Marquise' || shape === 'Heart')) {
+            // Case B: White + Marquise/Heart
+            if (carat >= 1.0 && carat < 1.49) unitPrice = 285.72;
+            else if (carat >= 1.5 && carat < 1.999) unitPrice = 304.82;
+            else if (carat >= 2.0 && carat < 3.499) unitPrice = 313.92;
+            else if (carat >= 3.5 && carat < 3.999) unitPrice = 349.29;
+            else if (carat >= 4.0 && carat < 4.499) unitPrice = 364.28;
+            else if (carat >= 4.5 && carat <= 5.499) unitPrice = 334.28;
+        }
+        else if (color === 'White' && ['Princess', 'Radiant', 'Oval', 'Pear', 'Cushion'].includes(shape)) {
+            // Case C: White + Others
+            if (carat >= 1.0 && carat < 1.999) unitPrice = 243.58;
+            else if (carat >= 2.0 && carat < 2.999) unitPrice = 246.43;
+            else if (carat >= 3.0 && carat < 3.499) unitPrice = 257.15;
+            else if (carat >= 3.5 && carat <= 5.49) unitPrice = 300.00;
+        }
+        else if (color !== 'White') {
+            // Case D: Colored Diamonds (Round is already locked to White, so this only applies to others)
+            if (carat >= 1.0 && carat <= 1.6) unitPrice = 411.5;
+            else if (carat > 1.6 && carat <= 2.599) unitPrice = 428.6;
+            else if (carat > 2.599 && carat <= 3.799) unitPrice = 471.43;
+            else if (carat >= 3.8 && carat <= 5.5) unitPrice = 514.0;
+        }
+
+        // 输出结果
+        if (unitPrice > 0) {
+            const total = (carat * unitPrice).toFixed(2);
+            resultArea.innerHTML = `
+                <div style="color: #666; font-size: 14px;">Total Estimated Quote</div>
+                <div class="total-price">$${total}</div>
+                <div style="font-size: 12px; color: #999; margin-top: 10px;">Calculation based on ${carat} ct ${color} ${shape}</div>
+            `;
+        } else {
+            resultArea.innerHTML = '<div class="error-msg">No quote available for this specific range/criteria.</div>';
+        }
+    }
+</script>
+
+</body>
+</html>
